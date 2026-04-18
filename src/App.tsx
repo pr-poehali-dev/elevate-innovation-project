@@ -11,6 +11,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import Forum from "./pages/Forum";
+import FreeCheats from "./pages/FreeCheats";
+import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -33,6 +36,9 @@ const App = () => (
           <Route path="/pricing" element={<PrivateRoute><Pricing /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
+          <Route path="/forum" element={<Forum />} />
+          <Route path="/free-cheats" element={<FreeCheats />} />
+          <Route path="/support" element={<Support />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

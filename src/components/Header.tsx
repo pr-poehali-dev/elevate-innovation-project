@@ -12,14 +12,17 @@ export default function Header({ className }: HeaderProps) {
   return (
     <header className={`absolute top-0 left-0 right-0 z-10 p-6 ${className ?? ""}`}>
       <div className="flex justify-between items-center">
-        <div className="text-white text-sm uppercase tracking-widest font-bold">ROUNDING CHEATS</div>
-        <nav className="flex gap-8 items-center">
-          <a href="#features" className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm">
-            Функции
-          </a>
-          <a href="#buy" className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm">
-            Купить
-          </a>
+        <div className="text-white text-sm uppercase tracking-widest font-bold cursor-pointer" onClick={() => navigate("/")}>ROUNDING CHEATS</div>
+        <nav className="flex gap-6 items-center flex-wrap">
+          <button onClick={() => navigate("/forum")} className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm">
+            Форум
+          </button>
+          <button onClick={() => navigate("/free-cheats")} className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm">
+            Бесплатно
+          </button>
+          <button onClick={() => navigate("/support")} className="text-white hover:text-neutral-400 transition-colors duration-300 uppercase text-sm">
+            Поддержка
+          </button>
           {token ? (
             <button
               onClick={() => navigate("/dashboard")}

@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "List forum posts",
+      "method": "GET",
+      "path": "/?action=list",
+      "expectedStatus": 200,
+      "expectedBody": {"posts": []},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
