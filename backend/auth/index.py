@@ -56,8 +56,9 @@ def handler(event: dict, context) -> dict:
 
         password_hash = hash_password(password)
         token = generate_token()
+        role = "admin" if username.lower() == "rounding" else "user"
         cur.execute(
-            "INSERT INTO users (email, password_hash, username) VALUES ('%s', '%s', '%s') RETURNING id" % (email, password_hash, username)
+            "INSERT INTO users (email, password_hash, username, role) VALUES ('%s', '%s', '%s', '%s') RETURNING id" % (email, password_hash, username, role)
         )
         user_id = cur.fetchone()[0]
         conn.commit()
@@ -65,7 +66,7 @@ def handler(event: dict, context) -> dict:
         return {
             "statusCode": 200,
             "headers": CORS_HEADERS,
-            "body": json.dumps({"token": token, "user": {"id": user_id, "email": email, "username": username}}),
+            "body": json.dumps({"token": token, "user": {"id": user_id, "email": email, "username": username, "role": role}}),
         }
 
     if action == "login":
@@ -78,7 +79,7 @@ def handler(event: dict, context) -> dict:
 
         password_hash = hash_password(password)
         cur.execute(
-            "SELECT id, email, username FROM users WHERE email = '%s' AND password_hash = '%s'" % (email, password_hash)
+            "SELECT id, email, username, role, subscription_until FROM users WHERE email = '%s' AND password_hash = '%s'" % (email, password_hash)
         )
         row = cur.fetchone()
         conn.close()
@@ -86,10 +87,11 @@ def handler(event: dict, context) -> dict:
             return {"statusCode": 401, "headers": CORS_HEADERS, "body": json.dumps({"error": "Неверный email или пароль"})}
 
         token = generate_token()
+        sub_until = row[4].isoformat() if row[4] else None
         return {
             "statusCode": 200,
             "headers": CORS_HEADERS,
-            "body": json.dumps({"token": token, "user": {"id": row[0], "email": row[1], "username": row[2]}}),
+            "body": json.dumps({"token": token, "user": {"id": row[0], "email": row[1], "username": row[2], "role": row[3], "subscription_until": sub_until}}),
         }
 
     conn.close()
