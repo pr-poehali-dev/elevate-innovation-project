@@ -18,7 +18,7 @@ export default function Featured() {
           Обходи защиту, опережай соперников и контролируй игру. Наши решения работают незаметно — ты просто выигрываешь.
         </p>
         <button
-          onClick={() => navigate("/pricing")}
+          onClick={() => navigate(localStorage.getItem("rc_token") ? "/pricing" : "/register")}
           className="bg-black text-white border border-black px-4 py-2 text-sm transition-all duration-300 hover:bg-white hover:text-black cursor-pointer w-fit uppercase tracking-wide"
         >
           Купить сейчас

@@ -35,7 +35,7 @@ export default function Hero() {
           Доминируй. Побеждай. Выигрывай.
         </p>
         <button
-          onClick={() => navigate("/pricing")}
+          onClick={() => navigate(localStorage.getItem("rc_token") ? "/pricing" : "/register")}
           className="inline-block mt-10 px-10 py-4 bg-white text-black font-bold uppercase tracking-widest text-sm hover:bg-neutral-200 transition-colors duration-300"
         >
           Получить доступ
