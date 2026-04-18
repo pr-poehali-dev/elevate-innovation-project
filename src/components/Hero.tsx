@@ -25,13 +25,19 @@ export default function Hero() {
         />
       </motion.div>
 
-      <div className="relative z-10 text-center text-white">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
-          ОТКРОЙ
+      <div className="relative z-10 text-center text-white px-6">
+        <h1 className="text-5xl md:text-7xl lg:text-9xl font-black tracking-tighter mb-6 uppercase leading-none">
+          ROUNDING<br />CHEATS
         </h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto px-6 opacity-90">
-          Исследуй границы дизайна с иммерсивным параллакс-эффектом
+        <p className="text-xl md:text-3xl lg:text-4xl font-bold uppercase tracking-widest opacity-90 mt-4">
+          Доминируй. Побеждай. Выигрывай.
         </p>
+        <a
+          href="#buy"
+          className="inline-block mt-10 px-10 py-4 bg-white text-black font-bold uppercase tracking-widest text-sm hover:bg-neutral-200 transition-colors duration-300"
+        >
+          Получить доступ
+        </a>
       </div>
     </div>
   );
