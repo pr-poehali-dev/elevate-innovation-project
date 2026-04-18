@@ -3,35 +3,58 @@ import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
 const plans = [
+  { days: 30, label: "1 месяц", price: 700, perDay: "23 ₽/день", popular: false },
+  { days: 90, label: "3 месяца", price: 1800, perDay: "20 ₽/день", popular: true },
+  { days: 365, label: "1 год", price: 5290, perDay: "14 ₽/день", popular: false },
+];
+
+const features = [
   {
-    days: 30,
-    label: "1 месяц",
-    price: 700,
-    perDay: "23 ₽/день",
-    popular: false,
+    category: "RAGEBOT",
+    items: [
+      { name: "Antihit", status: "active" },
+      { name: "Yaw", status: "active" },
+      { name: "Aim", status: "active" },
+      { name: "Autofire", status: "active" },
+      { name: "Rapidfire", status: "active" },
+      { name: "Min Damage", status: "active" },
+      { name: "Hitchance", status: "active" },
+      { name: "Quick Peek Assist", status: "active" },
+      { name: "Duck Peek Assist", status: "active" },
+    ],
   },
   {
-    days: 90,
-    label: "3 месяца",
-    price: 1800,
-    perDay: "20 ₽/день",
-    popular: true,
+    category: "LEGITBOT",
+    items: [
+      { name: "Legitbot", status: "wip" },
+    ],
   },
   {
-    days: 365,
-    label: "1 год",
-    price: 5290,
-    perDay: "14 ₽/день",
-    popular: false,
+    category: "VISUALS",
+    items: [
+      { name: "ESP Box", status: "active" },
+      { name: "ESP Healthbar", status: "active" },
+      { name: "Chams", status: "active" },
+    ],
+  },
+  {
+    category: "MISC",
+    items: [
+      { name: "Autostrafer", status: "active" },
+      { name: "Bunnyhop", status: "active" },
+      { name: "Check for Stop", status: "active" },
+      { name: "Auto Stop", status: "active" },
+    ],
   },
 ];
 
 export default function Pricing() {
   const [selected, setSelected] = useState<number | null>(1);
+  const [discordModal, setDiscordModal] = useState(false);
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-neutral-950 flex flex-col items-center px-4 py-16">
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-6 text-neutral-400 hover:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-wide"
@@ -40,7 +63,7 @@ export default function Pricing() {
         Назад
       </button>
 
-      <div className="text-center mb-12">
+      <div className="text-center mb-12 mt-8">
         <p className="text-neutral-400 uppercase tracking-widest text-sm mb-3">Выбери тариф</p>
         <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
           ROUNDING CHEATS
@@ -74,18 +97,9 @@ export default function Pricing() {
               {plan.perDay}
             </p>
             <ul className={`text-sm space-y-2 w-full ${selected === idx ? "text-neutral-700" : "text-neutral-400"}`}>
-              <li className="flex items-center gap-2">
-                <Icon name="Check" size={14} />
-                Доступ на {plan.days} дней
-              </li>
-              <li className="flex items-center gap-2">
-                <Icon name="Check" size={14} />
-                Все функции читов
-              </li>
-              <li className="flex items-center gap-2">
-                <Icon name="Check" size={14} />
-                Поддержка 24/7
-              </li>
+              <li className="flex items-center gap-2"><Icon name="Check" size={14} />Доступ на {plan.days} дней</li>
+              <li className="flex items-center gap-2"><Icon name="Check" size={14} />Все функции читов</li>
+              <li className="flex items-center gap-2"><Icon name="Check" size={14} />Поддержка 24/7</li>
             </ul>
           </div>
         ))}
@@ -101,6 +115,78 @@ export default function Pricing() {
       <p className="mt-6 text-neutral-600 text-xs text-center max-w-sm">
         После оплаты вы получите инструкцию по активации на указанный контакт
       </p>
+
+      <div className="flex gap-4 mt-6">
+        <a
+          href="https://t.me/herocheatssndcracs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-6 py-3 border border-neutral-700 text-white text-sm uppercase tracking-wide hover:border-white transition-colors"
+        >
+          <Icon name="Send" size={16} />
+          Telegram
+        </a>
+        <button
+          onClick={() => setDiscordModal(true)}
+          className="flex items-center gap-2 px-6 py-3 border border-neutral-700 text-white text-sm uppercase tracking-wide hover:border-white transition-colors"
+        >
+          <Icon name="MessageCircle" size={16} />
+          Discord
+        </button>
+      </div>
+
+      <div className="w-full max-w-4xl mt-20">
+        <h2 className="text-white text-2xl font-black uppercase tracking-widest mb-8 text-center">Функции</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {features.map((group) => (
+            <div key={group.category} className="border border-neutral-800 bg-neutral-900 p-6">
+              <h3 className="text-neutral-400 uppercase tracking-widest text-xs mb-4">{group.category}</h3>
+              <ul className="space-y-2">
+                {group.items.map((item) => (
+                  <li key={item.name} className="flex items-center justify-between">
+                    <span className="text-white text-sm">{item.name}</span>
+                    {item.status === "wip" ? (
+                      <span className="text-xs uppercase tracking-wider text-yellow-500 border border-yellow-500/30 px-2 py-0.5">In Works</span>
+                    ) : (
+                      <Icon name="Check" size={14} className="text-green-400" />
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {discordModal && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          onClick={() => setDiscordModal(false)}
+        >
+          <div
+            className="bg-neutral-900 border border-neutral-700 p-10 max-w-sm w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Icon name="Wrench" size={40} className="text-yellow-500 mx-auto mb-4" />
+            <h2 className="text-white text-xl font-black uppercase tracking-wide mb-2">В разработке</h2>
+            <p className="text-neutral-400 text-sm mb-6">Discord-сервер скоро откроется. Следи за обновлениями в Telegram!</p>
+            <a
+              href="https://t.me/herocheatssndcracs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full py-3 bg-white text-black font-bold uppercase tracking-widest text-sm hover:bg-neutral-200 transition-colors mb-3"
+            >
+              Перейти в Telegram
+            </a>
+            <button
+              onClick={() => setDiscordModal(false)}
+              className="text-neutral-500 text-sm hover:text-white transition-colors"
+            >
+              Закрыть
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
