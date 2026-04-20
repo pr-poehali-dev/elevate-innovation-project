@@ -7,6 +7,14 @@
       "expectedStatus": 200,
       "expectedBody": {"posts": []},
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "Chat list",
+      "method": "GET",
+      "path": "/?action=chat_list&since=0",
+      "expectedStatus": 200,
+      "expectedBody": {"messages": []},
+      "bodyMatcher": "partial"
     }
   ]
 }

@@ -1,7 +1,9 @@
 """
-Форум: список постов, создание поста с файлом (base64), загрузка в S3.
-?action=list — все посты
-?action=create — POST, создать пост (с файлом или без)
+Форум: посты и чат.
+?action=list          — все посты
+?action=create        — POST, создать пост (с файлом или без)
+?action=chat_list&since=0  — получить сообщения чата (id > since)
+?action=chat_send     — POST, отправить сообщение {user_id, username, content}
 """
 import json
 import os
@@ -41,6 +43,7 @@ def handler(event: dict, context) -> dict:
     conn = get_db()
     cur = conn.cursor()
 
+    # --- Посты ---
     if action == "list":
         cur.execute(
             "SELECT id, user_id, username, title, content, file_url, file_name, created_at FROM forum_posts ORDER BY created_at DESC LIMIT 100"
@@ -85,6 +88,49 @@ def handler(event: dict, context) -> dict:
         conn.commit()
         conn.close()
         return {"statusCode": 200, "headers": CORS_HEADERS, "body": json.dumps({"ok": True, "id": post_id, "file_url": file_url})}
+
+    # --- Чат ---
+    if action == "chat_list":
+        since = int(params.get("since", 0))
+        cur.execute(
+            "SELECT id, user_id, username, content, created_at FROM chat_messages WHERE id > %d ORDER BY id ASC LIMIT 80" % since
+        )
+        rows = cur.fetchall()
+        conn.close()
+        messages = [
+            {
+                "id": r[0], "user_id": r[1], "username": r[2],
+                "content": r[3], "created_at": r[4].isoformat() if r[4] else "",
+            }
+            for r in rows
+        ]
+        return {"statusCode": 200, "headers": CORS_HEADERS, "body": json.dumps({"messages": messages})}
+
+    if action == "chat_send":
+        user_id = body.get("user_id")
+        username = str(body.get("username", "Гость"))[:100].replace("'", "''")
+        content = str(body.get("content", "")).strip()[:1000]
+
+        if not content:
+            conn.close()
+            return {"statusCode": 400, "headers": CORS_HEADERS, "body": json.dumps({"error": "Пустое сообщение"})}
+
+        uid_part = str(int(user_id)) if user_id else "NULL"
+        cur.execute(
+            "INSERT INTO chat_messages (user_id, username, content) VALUES (%s, '%s', '%s') RETURNING id, created_at" % (
+                uid_part, username, content.replace("'", "''")
+            )
+        )
+        row = cur.fetchone()
+        conn.commit()
+        conn.close()
+        return {"statusCode": 200, "headers": CORS_HEADERS, "body": json.dumps({
+            "ok": True,
+            "message": {
+                "id": row[0], "user_id": user_id, "username": body.get("username", "Гость"),
+                "content": body.get("content", "").strip(), "created_at": row[1].isoformat()
+            }
+        })}
 
     conn.close()
     return {"statusCode": 400, "headers": CORS_HEADERS, "body": json.dumps({"error": "Неверный action"})}
